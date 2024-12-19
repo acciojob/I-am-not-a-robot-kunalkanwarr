@@ -78,3 +78,9 @@ function init() {
 }
 
 init();
+
+if (resetButton.style.display === 'inline' || resetButton.style.display === 'block') {
+    console.log("Reset button is shown.");
+} else {
+    console.log("Reset button is hidden.");
+}
