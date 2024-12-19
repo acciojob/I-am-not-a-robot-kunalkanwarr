@@ -64,6 +64,13 @@ function handleClick(event) {
     if (firstClick && secondClick) {
         resetButton.style.display = 'inline'; // Show reset button
     }
+
+    // Check if Reset button is shown
+    if (resetButton.style.display === 'inline' || resetButton.style.display === 'block') {
+        console.log("Reset button is shown.");
+    } else {
+        console.log("Reset button is hidden.");
+    }
 }
 
 // Attach event listeners to images
@@ -78,9 +85,3 @@ function init() {
 }
 
 init();
-
-if (resetButton.style.display === 'inline' || resetButton.style.display === 'block') {
-    console.log("Reset button is shown.");
-} else {
-    console.log("Reset button is hidden.");
-}
