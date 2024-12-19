@@ -38,3 +38,15 @@ p {
 button {
   margin: 20px;
 }
+#reset, #verify {
+    display: none;
+}
+
+#image-container img.selected {
+    border: 2px solid blue; /* Highlight selected images */
+}
+
+#para {
+    font-size: 18px;
+    color: green;
+}
