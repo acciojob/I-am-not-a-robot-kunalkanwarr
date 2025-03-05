@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot Verification</title>
-    <style>
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            width: 300px;
-            margin: 20px auto;
-        }
-        .tile {
-            width: 90px;
-            height: 90px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        button {
-            display: none;
-            margin-top: 20px;
-        }
-        #para {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h3 id="h">Please click on the identical tiles to verify that you are not a robot.</h3>
-    <div class="container" id="image-container"></div>
-    <button id="reset">Reset</button>
-    <button id="verify">Verify</button>
-    <p id="para"></p>
-
-    <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I'm not a robot</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <!-- solution start -->
+      <h3 id="h">Please click on the identical tiles to verify that you are not a robot.</h3>
+    <div id="image-container">
+        <img src="image1.jpg" class="img1" id="img1">
+        <img src="image2.jpg" class="img2" id="img2">
+        <img src="image3.jpg" class="img3" id="img3">
+        <img src="image4.jpg" class="img4" id="img4">
+        <img src="image5.jpg" class="img5" id="img5">
+        <img src="image1.jpg" class="img1" id="img6"> <!-- This is the duplicate image -->
+    </div>
+    <button id="reset" onclick="reset()">Reset</button>
+    <button id="verify" onclick="verify()" style="display: none;">Verify</button>
+    <p id="para" style="display: none;"></p>
+      <!-- solution end -->
+    </main>
+    <script src="./script.js"></script>
+  </body>
 </html>
