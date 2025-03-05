@@ -1,87 +1,74 @@
-//your code here
-let firstClick = null;
-let secondClick = null;
-let isVerifyClicked = false;
-
-const resetButton = document.getElementById('reset');
-const verifyButton = document.getElementById('verify');
-const para = document.getElementById('para');
-const images = document.querySelectorAll('img');
-const message = document.getElementById('h');
-
-// Randomize images and pick one to repeat
-function randomizeImages() {
-    const imageArray = Array.from(images);
-    const duplicateIndex = Math.floor(Math.random() * 5); // Pick a random index for the duplicate
-    const duplicateImage = imageArray[duplicateIndex].src;
-
-    imageArray.forEach(img => {
-        img.style.order = Math.floor(Math.random() * 100); // Randomize image order
-    });
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.image');
+  const resetButton = document.getElementById('reset');
+  const verifyButton = document.getElementById('verify');
+  const message = document.getElementById('h');
+  const resultMessage = document.getElementById('para');
+  
+  let clickedImages = [];
+  let duplicateImageIndex = -1;
+  
+  // Function to shuffle images
+  function shuffleImages() {
+    const imageSources = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg'];
+    const duplicateImage = imageSources[Math.floor(Math.random() * imageSources.length)];
+    const shuffledImages = [...imageSources, duplicateImage];
     
-    return duplicateImage;
-}
+    // Randomize image order
+    shuffledImages.sort(() => Math.random() - 0.5);
+    
+    // Set image sources
+    images.forEach((image, index) => {
+      image.src = shuffledImages[index];
+    });
+  }
 
-// Reset state
-function reset() {
-    firstClick = null;
-    secondClick = null;
-    isVerifyClicked = false;
-    para.style.display = 'none';
-    verifyButton.style.display = 'none';
+  // Reset the game
+  function resetGame() {
+    clickedImages = [];
+    resultMessage.textContent = '';
+    message.textContent = 'Please click on the identical tiles to verify that you are not a robot.';
     resetButton.style.display = 'none';
-    message.innerHTML = "Please click on the identical tiles to verify that you are not a robot.";
-    images.forEach(img => img.classList.remove('selected'));
-}
-
-// Verify the selection
-function verify() {
-    if (firstClick.src === secondClick.src) {
-        para.innerHTML = "You are a human. Congratulations!";
-    } else {
-        para.innerHTML = "We can't verify you as a human. You selected the non-identical tiles.";
-    }
-    para.style.display = 'block';
     verifyButton.style.display = 'none';
-    firstClick = null;
-    secondClick = null;
-}
+    images.forEach(image => image.style.border = '');
+  }
 
-// Image click handler
-function handleClick(event) {
-    if (firstClick === event.target || secondClick === event.target) {
-        return; // Ignore clicks on already selected images
-    }
+  // Show Reset button and handle clicks on images
+  images.forEach(image => {
+    image.addEventListener('click', () => {
+      if (clickedImages.length < 2 && !clickedImages.includes(image)) {
+        clickedImages.push(image);
+        image.style.border = '2px solid blue';
+        
+        if (clickedImages.length === 1) {
+          resetButton.style.display = 'block';
+        }
+        
+        if (clickedImages.length === 2) {
+          verifyButton.style.display = 'block';
+        }
+      }
+    });
+  });
 
-    event.target.classList.add('selected'); // Add a visual indicator
-    if (!firstClick) {
-        firstClick = event.target;
-    } else if (!secondClick) {
-        secondClick = event.target;
-        verifyButton.style.display = 'inline'; // Show verify button
-    }
+  // Handle Reset button click
+  resetButton.addEventListener('click', resetGame);
 
-    if (firstClick && secondClick) {
-        resetButton.style.display = 'inline'; // Show reset button
-    }
+  // Handle Verify button click
+  verifyButton.addEventListener('click', () => {
+    const [firstImage, secondImage] = clickedImages;
 
-    // Check if Reset button is shown
-    if (resetButton.style.display === 'inline' || resetButton.style.display === 'block') {
-        console.log("Reset button is shown.");
+    if (firstImage.src === secondImage.src) {
+      resultMessage.textContent = 'You are a human. Congratulations!';
     } else {
-        console.log("Reset button is hidden.");
+      resultMessage.textContent = 'We can\'t verify you as a human. You selected the non-identical tiles.';
     }
-}
 
-// Attach event listeners to images
-images.forEach(img => {
-    img.addEventListener('click', handleClick);
+    // Hide the verify button after clicking
+    verifyButton.style.display = 'none';
+    clickedImages = []; // Reset clicked images after verification
+  });
+
+  // Initialize the game
+  shuffleImages();
 });
-
-// Initialize the page
-function init() {
-    randomizeImages();
-    resetButton.style.display = 'none'; // Hide reset button initially
-}
-
-init();

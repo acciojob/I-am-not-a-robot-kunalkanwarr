@@ -1,0 +1,21 @@
+#images-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+button {
+  display: block;
+  margin: 20px;
+}
+
+#para {
+  font-size: 18px;
+  margin-top: 20px;
+}
