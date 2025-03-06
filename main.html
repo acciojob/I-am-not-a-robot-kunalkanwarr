@@ -1,28 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Verification</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Verification</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .image-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        .image-container img { width: 100px; height: 100px; cursor: pointer; border: 2px solid transparent; }
+        .selected { border: 2px solid blue; }
+        button { margin: 10px; padding: 10px; display: none; }
+    </style>
 </head>
 <body>
-  <h3 id="h">Please click on the identical tiles to verify that you are not a robot.</h3>
+    <h3 id="h">Please click on the identical tiles to verify that you are not a robot.</h3>
+    <div class="image-container" id="imageContainer"></div>
+    <button id="reset">Reset</button>
+    <button id="verify">Verify</button>
+    <p id="para"></p>
 
-  <div id="images-container">
-    <img src="image1.jpg" alt="Image 1" class="image" id="img1">
-    <img src="image2.jpg" alt="Image 2" class="image" id="img2">
-    <img src="image3.jpg" alt="Image 3" class="image" id="img3">
-    <img src="image4.jpg" alt="Image 4" class="image" id="img4">
-    <img src="image5.jpg" alt="Image 5" class="image" id="img5">
-    <img src="image6.jpg" alt="Image 6" class="image" id="img6">
-  </div>
+    <script>
+        const images = ["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg"];
+        let selectedImages = [];
+        const imageContainer = document.getElementById("imageContainer");
+        const resetButton = document.getElementById("reset");
+        const verifyButton = document.getElementById("verify");
+        const message = document.getElementById("para");
 
-  <button id="reset" style="display: none;">Reset</button>
-  <button id="verify" style="display: none;">Verify</button>
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
-  <p id="para"></p>
+        function initializeGame() {
+            let imagesCopy = [...images];
+            let duplicate = imagesCopy[Math.floor(Math.random() * imagesCopy.length)];
+            imagesCopy.push(duplicate);
+            shuffleArray(imagesCopy);
+            imageContainer.innerHTML = "";
 
-  <script src="script.js"></script>
+            imagesCopy.forEach((imgSrc, index) => {
+                let img = document.createElement("img");
+                img.src = imgSrc;
+                img.dataset.index = index;
+                img.onclick = () => selectImage(img);
+                imageContainer.appendChild(img);
+            });
+            resetGame();
+        }
+
+        function selectImage(img) {
+            if (selectedImages.length < 2 && !selectedImages.includes(img)) {
+                img.classList.add("selected");
+                selectedImages.push(img);
+            }
+            if (selectedImages.length === 2) verifyButton.style.display = "inline-block";
+            resetButton.style.display = "inline-block";
+        }
+
+        function verifySelection() {
+            if (selectedImages.length === 2) {
+                let [img1, img2] = selectedImages;
+                if (img1.src === img2.src) {
+                    message.textContent = "You are a human. Congratulations!";
+                } else {
+                    message.textContent = "We can't verify you as a human. You selected the non-identical tiles.";
+                }
+                verifyButton.style.display = "none";
+            }
+        }
+
+        function resetGame() {
+            selectedImages.forEach(img => img.classList.remove("selected"));
+            selectedImages = [];
+            resetButton.style.display = "none";
+            verifyButton.style.display = "none";
+            message.textContent = "";
+        }
+
+        resetButton.onclick = resetGame;
+        verifyButton.onclick = verifySelection;
+        initializeGame();
+    </script>
 </body>
 </html>
