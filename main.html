@@ -7,16 +7,16 @@
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
         .container { display: flex; justify-content: center; flex-wrap: wrap; }
-        .image-box { margin: 10px; cursor: pointer; }
+        .image-box { margin: 10px; cursor: pointer; width: 100px; height: 100px; object-fit: cover; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <h3 id="h">Please click on the identical tiles to verify that you are not a robot.</h3>
     <div class="container" id="imageContainer"></div>
-    <button id="reset" class="hidden" onclick="resetGame()">Reset</button>
-    <button id="verify" class="hidden" onclick="verifySelection()">Verify</button>
-    <p id="para"></p>
+    <button id="reset" class="hidden" onclick="resetGame()" data-testid="reset-button">Reset</button>
+    <button id="verify" class="hidden" onclick="verifySelection()" data-testid="verify-button">Verify</button>
+    <p id="para" data-testid="verification-message"></p>
 
     <script>
         const images = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg', 'img5.jpg'];
@@ -43,17 +43,19 @@
             shuffledImages.forEach((src, index) => {
                 let img = document.createElement('img');
                 img.src = src;
-                img.className = 'image-box';
-                img.dataset.index = index;
-                img.onclick = () => selectImage(img, src);
+                img.className = `image-box img${index}`;
+                img.alt = `Image ${index}`;
+                img.dataset.src = src;
+                img.setAttribute("data-testid", `image-${index}`);
+                img.onclick = () => selectImage(img);
                 imageContainer.appendChild(img);
                 imageElements.push(img);
             });
         }
 
-        function selectImage(img, src) {
+        function selectImage(img) {
             if (selectedImages.length < 2 && !selectedImages.includes(img)) {
-                selectedImages.push({ element: img, src: src });
+                selectedImages.push(img);
                 img.style.border = '3px solid blue';
                 document.getElementById('reset').classList.remove('hidden');
             }
@@ -63,7 +65,7 @@
         }
 
         function resetGame() {
-            selectedImages.forEach(({ element }) => element.style.border = 'none');
+            selectedImages.forEach(img => img.style.border = 'none');
             selectedImages = [];
             document.getElementById('reset').classList.add('hidden');
             document.getElementById('verify').classList.add('hidden');
@@ -72,7 +74,7 @@
 
         function verifySelection() {
             document.getElementById('verify').classList.add('hidden');
-            if (selectedImages[0].src === selectedImages[1].src) {
+            if (selectedImages[0].dataset.src === selectedImages[1].dataset.src) {
                 document.getElementById('para').textContent = "You are a human. Congratulations!";
             } else {
                 document.getElementById('para').textContent = "We can't verify you as a human. You selected the non-identical tiles.";
